@@ -31,7 +31,7 @@ Gem::Specification.new do |s|
   s.required_ruby_version  = '>= 1.9.3'
   s.summary                = 'Sensu plugins for monitoring LSI MegaRAID devices'
   s.test_files             = s.files.grep(%r{^(test|spec|features)/})
-  s.version                = SensuPluginsNetworkInterface::Version::VER_STRING
+  s.version                = SensuPluginsMegaRAID::Version::VER_STRING
 
   s.add_runtime_dependency 'sensu-plugin',   '1.2.0'
 end
