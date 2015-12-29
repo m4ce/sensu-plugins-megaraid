@@ -5,6 +5,10 @@ This CHANGELOG follows the format listed at [Keep A Changelog](http://keepachang
 
 ## Unreleased
 
+## [0.0.5] - 2015-12-29
+### Added
+- Adding more healthy states for physical disks (e.g. dhs, ugood, ghs)
+
 ## [0.0.4] - 2015-12-29
 ### Added
 - Normalizing VD and PD names
