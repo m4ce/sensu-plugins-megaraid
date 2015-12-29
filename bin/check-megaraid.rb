@@ -104,9 +104,10 @@ class CheckMegaRAID < Sensu::Plugin::Check::CLI
       end
 
       controller['virtualdisks'].each do |vd|
-        check_name = "megaraid-ctl_#{id}-vd_#{vd['DG/VD']}-state"
+        vd_name = vd['DG/VD'].gsub('/', '_')
+        check_name = "megaraid-ctl_#{id}-vd_#{vd_name}-state"
         if vd['State'].downcase != "optl"
-          msg = "Controller #{id} VD #{vd['DG/VD']} is not healthy (Status: #{vd['State']})"
+          msg = "Controller #{id} VD #{vd_name} is not healthy (Status: #{vd['State']})"
           if config[:warn]
             send_warning(check_name, msg)
           else
@@ -114,14 +115,15 @@ class CheckMegaRAID < Sensu::Plugin::Check::CLI
           end
           problems += 1
         else
-          send_ok(check_name, "Controller #{id} VD #{vd['DG/VD']} is healthy")
+          send_ok(check_name, "Controller #{id} VD #{vd_name} is healthy")
         end
       end
 
       controller['physicaldisks'].each do |pd|
-        check_name = "megaraid-ctl_#{id}-pd_#{pd['EID:Slt']}-state"
+        pd_name = pd['EID:Slt'].gsub(':', '_')
+        check_name = "megaraid-ctl_#{id}-pd_#{pd_name}-state"
         if pd['State'].downcase != "onln"
-          msg = "Controller #{id} PD #{pd['EID:Slt']} is not healthy (Status: #{pd['State']})"
+          msg = "Controller #{id} PD #{pd_name} is not healthy (Status: #{pd['State']})"
           if config[:warn]
             send_warning(check_name, msg)
           else
@@ -129,7 +131,7 @@ class CheckMegaRAID < Sensu::Plugin::Check::CLI
           end
           problems += 1
         else
-          send_ok(check_name, "Controller #{id} PD #{pd['EID:Slt']} is healthy")
+          send_ok(check_name, "Controller #{id} PD #{pd_name} is healthy")
         end
       end
 
