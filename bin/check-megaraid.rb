@@ -135,7 +135,7 @@ class CheckMegaRAID < Sensu::Plugin::Check::CLI
 
       controller['enclosures'].each do |enc|
         check_name = "megaraid-ctl_#{id}-enc_#{enc['EID']}-state"
-        if enc['State'].downcase != "OK"
+        if enc['State'].downcase != "ok"
           msg = "Controller #{id} enclosure #{enc['EID']} is not healthy (Status: #{enc['State']})"
           if config[:warn]
             send_warning(check_name, msg)
