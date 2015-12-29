@@ -169,7 +169,7 @@ class CheckMegaRAID < Sensu::Plugin::Check::CLI
       warning if config[:warn]
       critical
     else
-      ok "All controllers (#{@controllers.join(', ')}) are healthy"
+      ok "All controllers (#{@controllers.keys.join(', ')}) are healthy"
     end
   end
 end
