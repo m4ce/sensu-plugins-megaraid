@@ -122,7 +122,7 @@ class CheckMegaRAID < Sensu::Plugin::Check::CLI
       controller['physicaldisks'].each do |pd|
         pd_name = pd['EID:Slt'].gsub(':', '_')
         check_name = "megaraid-ctl_#{id}-pd_#{pd_name}-state"
-        if pd['State'].downcase != "onln"
+        unless ["onln", "ugood", "dhs", "ghs"].include?(pd['State'].downcase)
           msg = "Controller #{id} PD #{pd_name} is not healthy (Status: #{pd['State']})"
           if config[:warn]
             send_warning(check_name, msg)
