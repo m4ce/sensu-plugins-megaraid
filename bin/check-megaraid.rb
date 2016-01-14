@@ -23,11 +23,24 @@ class CheckMegaRAID < Sensu::Plugin::Check::CLI
          :proc => proc { |a| a.split(',') },
          :default => []
 
+  option :handlers,
+         :description => "Comma separated list of handlers",
+         :long => "--handlers <HANDLER>",
+         :proc => proc { |s| s.split(',') },
+         :default => []
+
   option :warn,
          :description => "Warn instead of throwing a critical failure",
          :short => "-w",
          :long => "--warn",
-         :boolean => false
+         :boolean => true,
+         :default => false
+
+  option :dryrun,
+         :description => "Do not send events to sensu client socket",
+         :long => "--dryrun",
+         :boolean => true,
+         :default => false
 
   def initialize()
     super
@@ -62,27 +75,31 @@ class CheckMegaRAID < Sensu::Plugin::Check::CLI
   end
 
   def send_client_socket(data)
-    sock = UDPSocket.new
-    sock.send(data + "\n", 0, "127.0.0.1", 3030)
+    if config[:dryrun]
+      puts data.inspect
+    else
+      sock = UDPSocket.new
+      sock.send(data + "\n", 0, "127.0.0.1", 3030)
+    end
   end
 
   def send_ok(check_name, msg)
-    event = {"name" => check_name, "status" => 0, "output" => "OK: #{msg}", "handler" => config[:handler]}
+    event = {"name" => check_name, "status" => 0, "output" => "#{self.class.name} OK: #{msg}", "handlers" => config[:handlers]}
     send_client_socket(event.to_json)
   end
 
   def send_warning(check_name, msg)
-    event = {"name" => check_name, "status" => 1, "output" => "WARNING: #{msg}", "handler" => config[:handler]}
+    event = {"name" => check_name, "status" => 1, "output" => "#{self.class.name} WARNING: #{msg}", "handlers" => config[:handlers]}
     send_client_socket(event.to_json)
   end
 
   def send_critical(check_name, msg)
-    event = {"name" => check_name, "status" => 2, "output" => "CRITICAL: #{msg}", "handler" => config[:handler]}
+    event = {"name" => check_name, "status" => 2, "output" => "#{self.class.name} CRITICAL: #{msg}", "handlers" => config[:handlers]}
     send_client_socket(event.to_json)
   end
 
   def send_unknown(check_name, msg)
-    event = {"name" => check_name, "status" => 3, "output" => "UNKNOWN: #{msg}", "handler" => config[:handler]}
+    event = {"name" => check_name, "status" => 3, "output" => "#{self.class.name} UNKNOWN: #{msg}", "handlers" => config[:handlers]}
     send_client_socket(event.to_json)
   end
 

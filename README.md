@@ -13,8 +13,12 @@ The plugin accepts the following command line options:
 Usage: check-megaraid.rb (options)
     -C, --controller-id <ID>         Comma separated list of Controller ID(s) (default: all)
     -c, --storcli-cmd <PATH>         Path to StorCLI executable (default: /opt/MegaRAID/storcli/storcli64)
+        --dryrun                     Do not send events to sensu client socket
+        --handlers <HANDLERS>        Comma separated list of handlers
     -w, --warn                       Warn instead of throwing a critical failure
 ```
+
+Use the --handlers command line option to specify which handlers you want to use for the generated events.
 
 ## Author
 Matteo Cerutti - <matteo.cerutti@hotmail.co.uk>
