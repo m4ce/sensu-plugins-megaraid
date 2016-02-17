@@ -5,6 +5,16 @@ A sensu plugin to monitor LSI MegaRAID devices.
 The plugin generates multiple OK/WARN/CRIT/UNKNOWN events via the sensu client socket (https://sensuapp.org/docs/latest/clients#client-socket-input)
 so that you do not miss state changes when monitoring multiple controllers, enclosures, virtual disks etc.
 
+## Installation
+
+System-wide installation:
+
+    $ gem install sensu-plugins-megaraid
+
+Embedded sensu installation:
+
+    $ /opt/sensu/embedded/bin/gem install sensu-plugins-megaraid
+
 ## Usage
 
 The plugin accepts the following command line options:
