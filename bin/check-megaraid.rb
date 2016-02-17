@@ -45,6 +45,8 @@ class CheckMegaRAID < Sensu::Plugin::Check::CLI
   def initialize()
     super
 
+    raise "Unable to find storcli command" unless File.executable?(config[:storcli_cmd])
+
     if config[:controller_id].length > 0
       controller_id = config[:controller_id]
     else
@@ -71,7 +73,11 @@ class CheckMegaRAID < Sensu::Plugin::Check::CLI
 
   def get_controllers()
     data = JSON.parse(%x[#{config[:storcli_cmd]} show J].chomp)
-    data['Controllers'][0]['Response Data']['System Overview'].map { |i| i['Ctl'] }
+    if data.has_key?('Controllers')
+      data['Controllers'][0]['Response Data']['System Overview'].map { |i| i['Ctl'] }
+    else
+      []
+    end
   end
 
   def send_client_socket(data)
@@ -188,7 +194,11 @@ class CheckMegaRAID < Sensu::Plugin::Check::CLI
       warning if config[:warn]
       critical
     else
-      ok "All controllers (#{@controllers.keys.join(', ')}) are healthy"
+      if @controllers
+        ok "All controllers (#{@controllers.keys.join(', ')}) are healthy"
+      else
+        ok "No MegaRAID devices detected"
+      end
     end
   end
 end
