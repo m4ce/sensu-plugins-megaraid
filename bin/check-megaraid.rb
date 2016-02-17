@@ -73,9 +73,9 @@ class CheckMegaRAID < Sensu::Plugin::Check::CLI
 
   def get_controllers()
     data = JSON.parse(%x[#{config[:storcli_cmd]} show J].chomp)
-    if data.has_key?('Controllers')
+    begin
       data['Controllers'][0]['Response Data']['System Overview'].map { |i| i['Ctl'] }
-    else
+    rescue
       []
     end
   end
@@ -194,7 +194,7 @@ class CheckMegaRAID < Sensu::Plugin::Check::CLI
       warning if config[:warn]
       critical
     else
-      if @controllers
+      if @controllers.size > 0
         ok "All controllers (#{@controllers.keys.join(', ')}) are healthy"
       else
         ok "No MegaRAID devices detected"
